@@ -1,0 +1,131 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String   @id @default(uuid())
+  name       String
+  email      String   @unique
+  password   String
+  company_id String?
+  company    Company? @relation(fields: [company_id], references: [id], onDelete: Cascade)
+  is_admin   Boolean  @default(false)
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+}
+
+model City {
+  id      String    @id @default(uuid())
+  name    String    @unique
+  Address Address[]
+}
+
+model State {
+  id      String    @id @default(uuid())
+  name    String    @unique
+  Address Address[]
+}
+
+model Address {
+  id         String   @id @default(uuid())
+  logradouro String
+  numero     String
+  bairro     String
+  cep        String
+  city_id    String
+  state_id   String
+  client_id  String?
+  company_id String?
+  city       City     @relation(fields: [city_id], references: [id])
+  state      State    @relation(fields: [state_id], references: [id])
+  client     Client?  @relation(fields: [client_id], references: [id], onDelete: Cascade)
+  company    Company? @relation(fields: [company_id], references: [id], onDelete: Cascade)
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+}
+
+model Client {
+  id                  String               @id @default(uuid())
+  name                String
+  email               String               @unique
+  cpf                 String               @unique
+  phone               String
+  address             Address[]
+  created_at          DateTime             @default(now())
+  updated_at          DateTime             @default(now())
+  appointmentsClients AppointmentClients[]
+}
+
+model Company {
+  id          String        @id @default(uuid())
+  name        String
+  phone       String
+  cnpj        String        @unique
+  user_id     String
+  user        User[]
+  created_at  DateTime      @default(now())
+  updated_at  DateTime      @default(now())
+  address     Address[]
+  products    Product[]
+  appointments Appointment[]
+}
+
+model Product {
+  id                  String                @id @default(uuid())
+  type                String
+  price               Int
+  company_id          String?
+  company             Company?              @relation(fields: [company_id], references: [id])
+  created_at          DateTime              @default(now())
+  updated_at          DateTime              @default(now())
+  appointmentProducts AppointmentProducts[]
+}
+
+model Appointment {
+  id                  String                @id @default(uuid())
+  date                DateTime
+  responsible         String
+  status              AppontmentStatus      @default(Aberto)
+  amount              Int
+  company_id          String
+  company             Company               @relation(fields: [company_id], references: [id])
+  created_at          DateTime              @default(now())
+  updated_at          DateTime              @default(now())
+  appointmentProducts AppointmentProducts[] 
+  appointmentsClients AppointmentClients[]
+
+}
+
+model AppointmentProducts {
+  appointment_id String
+  product_id     String
+  appointment    Appointment @relation(fields: [appointment_id], references: [id])
+  product        Product     @relation(fields: [product_id], references: [id])
+
+
+  @@id([appointment_id, product_id])
+}
+
+model AppointmentClients {
+  appointment_id String
+  client_id      String
+  appointment    Appointment @relation(fields: [appointment_id], references: [id])
+  client         Client      @relation(fields: [client_id], references: [id])
+
+
+  @@id([appointment_id, client_id])
+}
+
+enum AppontmentStatus {
+  Aberto
+  Fechado
+  Cancelado
+}
