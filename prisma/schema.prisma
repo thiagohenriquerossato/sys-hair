@@ -69,7 +69,6 @@ model Company {
   name        String
   phone       String
   cnpj        String        @unique
-  user_id     String
   user        User[]
   created_at  DateTime      @default(now())
   updated_at  DateTime      @default(now())
