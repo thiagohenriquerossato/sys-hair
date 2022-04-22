@@ -32,6 +32,29 @@
 $ npm install
 ```
 
+## Docker and Database
+
+Install docker.
+
+Run docker compose script:
+```bash
+$ docker-compose up
+```
+Setting .env file with environments in docker-compose.yml and create jwt secret:
+JWT_SECRET=
+DATABASE_URL="postgresql://POSTGRES_USER:POSTGRES_PASSWORD@localhost:5432/POSTGRES_DB"
+
+Run prisma script:
+```bash
+$ npx prisma migrate dev
+```
+
+Now database is running. You can see db with:
+```bash
+$ npx prisma studio
+```
+
+
 ## Running the app
 
 ```bash

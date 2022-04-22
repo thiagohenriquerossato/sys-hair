@@ -8,7 +8,7 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('Documentação com Swagger - SysHair')
     .setDescription(
-      'O Swagger (aka OpenApi) é uma biblioteca muito conhecida no universo backend, estando disponível para diversas linguagens e frameworks. Ela gera um site interno no seu backend que descreve, com muitos detalhes, cada endpoint e estrutura de entidades presentes na sua aplicação.',
+      'Sistema criado como trabalho da terceira unidade da disciplina de Banco de dados da UFERSA. Esse é um sistema de gerenciamento de salões de beleza/barbearias',
     )
     .setVersion('1.0')
     .addTag('auth')
